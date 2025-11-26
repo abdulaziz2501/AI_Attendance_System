@@ -1,0 +1,6 @@
+opencv-python
+face-recognition
+pyttsx3
+speechrecognition
+sqlite3
+mediapipe==0.10.21
