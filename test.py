@@ -18,7 +18,7 @@ import csv
 
 # ---------- Settings ----------
 IMAGE_PATH = 'images'           # your folder with reference images
-FRAME_SCALE = 0.5              # scale factor for recognition (speed vs accuracy)
+FRAME_SCALE = 1.2            # scale factor for recognition (speed vs accuracy) aniqlikni sohirish uchun
 TOLERANCE = 0.5                 # face_recognition tolerance
 DEPARTURE_TIMEOUT = 10          # seconds of not-seen -> considered 'left'
 OUTPUT_CSV = 'attendance_sessions.csv'
@@ -180,12 +180,12 @@ try:
         # Optionally: show a small status panel of active people
         y = 20
         cv2.putText(frame, f"Active: {len(active)}  Sessions: {len(sessions)}", (10, y),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,0), 2)
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,0), 2)
         y += 25
         for i, (name, info) in enumerate(active.items()):
             if i >= 5: break
             txt = f"{name} (seen {int((now - info['last_seen']).total_seconds())}s ago)"
-            cv2.putText(frame, txt, (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200,200,200), 1)
+            cv2.putText(frame, txt, (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200,200,200), 1)
             y += 20
 
         cv2.imshow("Attendance (arrival/departure)", frame)
