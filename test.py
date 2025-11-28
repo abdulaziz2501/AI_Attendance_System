@@ -18,7 +18,7 @@ import csv
 
 # ---------- Settings ----------
 IMAGE_PATH = 'images'           # your folder with reference images
-FRAME_SCALE = 1.2            # scale factor for recognition (speed vs accuracy) aniqlikni sohirish uchun
+FRAME_SCALE = 0.9            # scale factor for recognition (speed vs accuracy) aniqlikni sohirish uchun
 TOLERANCE = 0.5                 # face_recognition tolerance
 DEPARTURE_TIMEOUT = 10          # seconds of not-seen -> considered 'left'
 OUTPUT_CSV = 'attendance_sessions.csv'
