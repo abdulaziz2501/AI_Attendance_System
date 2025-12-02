@@ -1,0 +1,44 @@
+# ===== ASOSIY KUTUBXONALAR =====
+
+# Yuzni tanib olish uchun
+face-recognition==1.3.0
+dlib==19.24.2
+
+# Computer vision
+opencv-python==4.8.1.78
+opencv-contrib-python==4.8.1.78
+
+# Rasm ishlash
+Pillow==10.1.0
+numpy==1.24.3
+
+# Web framework
+Flask==3.0.0
+Flask-CORS==4.0.0
+
+# Ma'lumotlar ishlash
+pandas==2.1.3
+
+# ===== QO'SHIMCHA KUTUBXONALAR =====
+
+# HTTP requests
+requests==2.31.0
+
+# Konfiguratsiya
+python-dotenv==1.0.0
+
+# ===== ESLATMA =====
+#
+# DLIB O'RNATISH:
+# Windows uchun:
+#   1. Visual Studio C++ Build Tools o'rnatish kerak
+#   2. CMake o'rnatish kerak
+#   3. pip install dlib
+#
+# Linux/Mac uchun:
+#   sudo apt-get install cmake
+#   sudo apt-get install libopenblas-dev liblapack-dev
+#   pip install dlib
+#
+# Agar dlib o'rnatishda muammo bo'lsa:
+#   pip install dlib-binary (bu osonroq variant)

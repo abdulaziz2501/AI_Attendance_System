@@ -5,7 +5,7 @@ import numpy as np
 from datetime import datetime
 
 # --- Rasmlar joylashgan papka ---
-path = 'images'
+path = '../images'
 images = []
 classNames = []
 

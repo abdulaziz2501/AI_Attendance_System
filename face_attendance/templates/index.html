@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yuzni Tanib Olish - Davomat Tizimi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .video-container {
+            position: relative;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        #videoFeed {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+            background: rgba(255,255,255,0.9);
+            color: #333;
+        }
+
+        .status-badge.active {
+            background: #10b981;
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-box h3 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .stat-box p {
+            opacity: 0.9;
+            font-size: 0.9em;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6366f1;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .attendance-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .attendance-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #e5e7eb;
+            transition: background 0.2s;
+        }
+
+        .attendance-item:hover {
+            background: #f9fafb;
+        }
+
+        .attendance-item:last-child {
+            border-bottom: none;
+        }
+
+        .student-info {
+            flex: 1;
+        }
+
+        .student-name {
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 3px;
+        }
+
+        .student-id {
+            color: #6b7280;
+            font-size: 0.9em;
+        }
+
+        .time-badge {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #9ca3af;
+        }
+
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+        }
+
+        .spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-left: 4px solid #3b82f6;
+        }
+
+        @media (max-width: 968px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Yuzni Tanib Olish - Davomat Tizimi</h1>
+            <p>Real-time Face Recognition Attendance System</p>
+        </div>
+
+        <div class="grid">
+            <!-- Video Feed -->
+            <div class="card">
+                <h2>📹 Jonli Video</h2>
+                <div class="video-container">
+                    <img id="videoFeed" src="{{ url_for('video_feed') }}" alt="Video Feed">
+                    <div class="status-badge active" id="statusBadge">
+                        🟢 Faol
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div>
+                <!-- Stats -->
+                <div class="card">
+                    <h2>📊 Statistika</h2>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <h3 id="totalStudents">0</h3>
+                            <p>Jami Talabalar</p>
+                        </div>
+                        <div class="stat-box">
+                            <h3 id="totalEncodings">0</h3>
+                            <p>Encoding'lar</p>
+                        </div>
+                        <div class="stat-box">
+                            <h3 id="todayCount">0</h3>
+                            <p>Bugungi Davomat</p>
+                        </div>
+                        <div class="stat-box">
+                            <h3 id="currentTime">--:--</h3>
+                            <p>Joriy Vaqt</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="card">
+                    <h2>⚙️ Boshqaruv</h2>
+                    <button class="btn btn-primary" onclick="createEncodings()">
+                        🔄 Encoding'larni Yangilash
+                    </button>
+                    <button class="btn btn-secondary" onclick="refreshAttendance()">
+                        🔃 Davomat Yangilash
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance List -->
+        <div class="card">
+            <h2>📝 Bugungi Davomat</h2>
+            <div id="alertContainer"></div>
+            <div id="attendanceList" class="attendance-list">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Yuklanmoqda...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Status tekshirish
+        async function checkStatus() {
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+
+                document.getElementById('totalStudents').textContent = data.total_students;
+                document.getElementById('totalEncodings').textContent = data.total_encodings;
+
+                // Ogohlantirish ko'rsatish
+                const alertContainer = document.getElementById('alertContainer');
+                if (!data.encodings_loaded) {
+                    alertContainer.innerHTML = `
+                        <div class="alert alert-warning">
+                            ⚠️ Encoding'lar yuklanmagan! Dataset papkasiga rasmlar qo'shing va "Encoding'larni Yangilash" tugmasini bosing.
+                        </div>
+                    `;
+                } else {
+                    alertContainer.innerHTML = '';
+                }
+            } catch (error) {
+                console.error('Status tekshirishda xato:', error);
+            }
+        }
+
+        // Davomat ro'yxatini olish
+        async function loadAttendance() {
+            try {
+                const response = await fetch('/api/attendance_today');
+                const data = await response.json();
+
+                const listContainer = document.getElementById('attendanceList');
+                const countElement = document.getElementById('todayCount');
+
+                countElement.textContent = data.count;
+
+                if (data.count === 0) {
+                    listContainer.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📭</div>
+                            <p>Bugun hali davomat yo'q</p>
+                        </div>
+                    `;
+                } else {
+                    listContainer.innerHTML = data.attendance.map(item => `
+                        <div class="attendance-item">
+                            <div class="student-info">
+                                <div class="student-name">${item.name}</div>
+                                <div class="student-id">ID: ${item.student_id}</div>
+                            </div>
+                            <div class="time-badge">🕐 ${item.time}</div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Davomat yuklanmadi:', error);
+                document.getElementById('attendanceList').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">❌</div>
+                        <p>Davomat yuklanishda xatolik</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Encoding yaratish
+        async function createEncodings() {
+            if (!confirm('Encoding\'larni qayta yaratmoqchimisiz? Bu biroz vaqt olishi mumkin.')) {
+                return;
+            }
+
+            const alertContainer = document.getElementById('alertContainer');
+            alertContainer.innerHTML = `
+                <div class="alert alert-info">
+                    🔄 Encoding'lar yaratilmoqda... Iltimos kuting.
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/create_encodings', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    alertContainer.innerHTML = `
+                        <div class="alert alert-info">
+                            ✅ ${data.message}! Jami: ${data.total} ta encoding
+                        </div>
+                    `;
+                    checkStatus();
+                } else {
+                    alertContainer.innerHTML = `
+                        <div class="alert alert-warning">
+                            ❌ ${data.message}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                alertContainer.innerHTML = `
+                    <div class="alert alert-warning">
+                        ❌ Xatolik yuz berdi: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Davomat yangilash
+        function refreshAttendance() {
+            loadAttendance();
+        }
+
+        // Joriy vaqtni yangilash
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('uz-UZ', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('currentTime').textContent = timeStr;
+        }
+
+        // Avtomatik yangilanish
+        setInterval(() => {
+            loadAttendance();
+            updateTime();
+        }, 5000); // Har 5 soniyada
+
+        // Boshlang'ich yuklash
+        window.onload = () => {
+            checkStatus();
+            loadAttendance();
+            updateTime();
+        };
+    </script>
+</body>
+</html>
